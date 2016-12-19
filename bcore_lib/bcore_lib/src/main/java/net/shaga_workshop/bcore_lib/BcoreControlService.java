@@ -55,6 +55,8 @@ public class BcoreControlService extends Service {
         }
     };
 
+    private Handler serviceLooper;
+
     private BluetoothGattCallback gattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
@@ -143,6 +145,8 @@ public class BcoreControlService extends Service {
         if (btManager == null) return;
 
         btAdapter = btManager.getAdapter();
+
+        serviceLooper = new Handler(this.getMainLooper());
     }
 
     @Override
@@ -292,7 +296,7 @@ public class BcoreControlService extends Service {
         {
             return;
         }
-        synchronized (this) {
+        //synchronized (this) {
             while(isExecute) {
                 try {
                     Thread.sleep(1);
@@ -303,7 +307,7 @@ public class BcoreControlService extends Service {
             isExecute = true;
             characteristic.setValue(value);
             btGatt.writeCharacteristic(characteristic);
-        }
+        //}
     }
 
     /**
@@ -317,7 +321,7 @@ public class BcoreControlService extends Service {
             return;
         }
 
-        synchronized (this) {
+        //synchronized (this) {
             while(isExecute) {
                 try {
                     Thread.sleep(1);
@@ -326,7 +330,7 @@ public class BcoreControlService extends Service {
                 }
             }
             btGatt.readCharacteristic(characteristic);
-        }
+        //}
     }
 
     /**
